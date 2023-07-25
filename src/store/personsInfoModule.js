@@ -1,15 +1,20 @@
 export const personsInfoModule = {
     state: () => ({
-        persons: {}
+        persons: {},
+        personList:[],
+        billList: [],
     }),
     getters: {
     },
     mutations: {
+        setPersonList(state, personList){
+            state.personList[personList.number] = personList.array
+        },
         setPersonName(state, name){
             if(state.persons[`bill_${name[1]}`][name[2]] === undefined){
                 state.persons[`bill_${name[1]}`][name[2]] = {
                     name: name[0],
-                    spend: undefined,
+                    spend: 0,
                     debt: [],
                     id: Date.now()
                 }
@@ -26,14 +31,14 @@ export const personsInfoModule = {
                     id: Date.now()
                 }
             }else{
-                state.persons[`bill_${spend[1]}`][spend[2]].spend = spend[0];
+                state.persons[`bill_${spend[1]}`][spend[2]].spend += spend[0];
             }
         },
         setPersonDebt(state, debt){
             if(state.persons[`bill_${debt[1]}`][debt[2]] === undefined){
                 state.persons[`bill_${debt[1]}`][debt[2]] = {
                     name: undefined,
-                    spend: undefined,
+                    spend: 0,
                     debt: [debt[0]],
                     id: Date.now()
                 }
@@ -51,9 +56,10 @@ export const personsInfoModule = {
                 someIdFlag = false
             }
         },
-        setBill(state, billNumber){
-            if(state.persons[`bill_${billNumber}`] === undefined){
-                state.persons[`bill_${billNumber}`] = []
+        setBill(state, bill){
+            state.billList.push(bill)
+            if(state.persons[`bill_${bill.number + 1}`] === undefined){
+                state.persons[`bill_${bill.number + 1}`] = []
             }
         }
     },

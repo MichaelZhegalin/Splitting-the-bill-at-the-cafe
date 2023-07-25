@@ -1,6 +1,6 @@
 <template>
  <main-navbar></main-navbar>
- <bill-navbar></bill-navbar>
+ <bill-navbar v-if="$route.params.id !== undefined"></bill-navbar>
  <router-view></router-view>
 </template>
 

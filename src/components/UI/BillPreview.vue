@@ -1,9 +1,15 @@
 <template>
-  <div @click="$router.push('/bill/1')" class="billPreview">Блок со счетом</div>
+  <div @click="$router.push(`/bill/${test}`)" class="billPreview">Блок со счетом</div>
 </template>
 
 <script>
 export default {
+  props: {
+    test: {
+      type: Number,
+      required: true
+    }
+  }
 
 }
 </script>

@@ -1,6 +1,7 @@
 export const foodInfoModule = {
     state: () => ({
-        food: {}
+        food: {},
+        billList: []
     }),
     getters: {
     },
@@ -41,9 +42,10 @@ export const foodInfoModule = {
                 state.food[`bill_${persons[1]}`][persons[2]].persons = persons[0];
             }
         },
-        setBill(state, billNumber){
-            if(state.food[`bill_${billNumber}`] === undefined){
-                state.food[`bill_${billNumber}`] = []
+        setBillFood(state, bill){
+            state.billList.push(bill)
+            if(state.food[`bill_${bill.number + 1}`] === undefined){
+                state.food[`bill_${bill.number + 1}`] = []
             }
         },
     },
