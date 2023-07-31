@@ -7,14 +7,12 @@
 export default {
   methods: {
     deleteBill(){
-      if(this.$store.state.personsInfo.billList.length === 1 || this.$route.params.id === 1){
-        this.$store.state.personsInfo.billList.shift()
-      }else{
-        for(let i in this.$store.state.personsInfo.billList){
-        if(this.$store.state.personsInfo.billList[i].number === Number(this.$route.params.id - 1)){
+      for(let i in this.$store.state.personsInfo.billList){
+        if(this.$store.state.personsInfo.billList[i].number === Number(this.$route.params.id - 1) && i !== '0'){
           this.$store.state.personsInfo.billList.splice(i, i)
+        }else if(this.$store.state.personsInfo.billList[i].number === Number(this.$route.params.id - 1)){
+          this.$store.state.personsInfo.billList.shift()
         }
-      }
       }
       this.$router.push('/')
     }

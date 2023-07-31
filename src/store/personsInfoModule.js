@@ -3,6 +3,7 @@ export const personsInfoModule = {
         persons: {},
         personList:[],
         billList: [],
+        crossDebtCheck: 0
     }),
     getters: {
     },
@@ -46,7 +47,7 @@ export const personsInfoModule = {
                 let someIdFlag = false;
                 for(let i = 0; i < state.persons[`bill_${debt[1]}`][debt[2]].debt.length; i++){
                     if(state.persons[`bill_${debt[1]}`][debt[2]].debt[i].id === debt[0].id){
-                        state.persons[`bill_${debt[1]}`][debt[2]].debt[i] = debt[0]
+                        state.persons[`bill_${debt[1]}`][debt[2]].debt[i].debt += debt[0].debt;
                         someIdFlag = true;
                     }
                 }
@@ -56,10 +57,44 @@ export const personsInfoModule = {
                 someIdFlag = false
             }
         },
+        clearDebt(state, debtInfo){
+            let billNumber = debtInfo.billNumber; 
+            let personNumber = debtInfo.personNumber;
+            let debtId = debtInfo.debtId;
+
+            for(let i = 0; i < state.persons[`bill_${billNumber}`][personNumber].debt.length; i++){
+                if(state.persons[`bill_${billNumber}`][personNumber].debt[i].id === debtId){
+                    if(i !== 0){
+                        state.persons[`bill_${billNumber}`][personNumber].debt[i] = state.persons[`bill_${billNumber}`][personNumber].debt[0];
+                        state.persons[`bill_${billNumber}`][personNumber].debt.shift();
+                    }else{
+                        state.persons[`bill_${billNumber}`][personNumber].debt.shift();
+                    }
+                }
+            }   
+        },
+        crossDebtCheck(state, debtInfo){
+            let billNumber = debtInfo.billNumber; 
+            let checkPersonNumber = debtInfo.checkPersonNumber;
+            let personId = debtInfo.personId;
+            let crossDebt = 0;
+            console.log('here', billNumber, checkPersonNumber, personId)
+
+            if(state.persons[`bill_${billNumber}`][checkPersonNumber] !== undefined){
+                for(let i = 0; i < state.persons[`bill_${billNumber}`][checkPersonNumber].debt.length; i++){
+                    if(state.persons[`bill_${billNumber}`][checkPersonNumber].debt[i].id === personId){
+                        crossDebt = state.persons[`bill_${billNumber}`][checkPersonNumber].debt[i].debt;
+                        console.log(state.persons[`bill_${billNumber}`][checkPersonNumber].debt[i].debt, state.persons[`bill_${billNumber}`][checkPersonNumber].debt[i])
+                    }
+                }
+            }
+
+            state.crossDebtCheck = crossDebt;
+        },
         setBill(state, bill){
-            state.billList.push(bill)
+            state.billList.push(bill);
             if(state.persons[`bill_${bill.number + 1}`] === undefined){
-                state.persons[`bill_${bill.number + 1}`] = []
+                state.persons[`bill_${bill.number + 1}`] = [];
             }
         }
     },
