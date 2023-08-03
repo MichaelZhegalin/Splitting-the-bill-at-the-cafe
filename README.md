@@ -5,6 +5,7 @@
 npm install
 
 npm install -g @vue/cli
+vue upgrade --next
 
 npm install bootstrap
 ```
