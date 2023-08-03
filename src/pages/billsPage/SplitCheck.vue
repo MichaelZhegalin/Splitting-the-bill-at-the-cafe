@@ -1,10 +1,17 @@
 <template>
-  <div>Тут будем показывать результаты подсчетов</div>
-  <button @click="deleteBill">Удалить чек</button>
+  <div class="container" style="display: flex; justify-content: center;">
+    <div class="row">
+      <div class="col" style="margin: 10px;">
+        <split-check-card @delete="deleteBill"></split-check-card>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import SplitCheckCard from '@/components/card/SplitCheckCard.vue'
 export default {
+  components: { SplitCheckCard },
   methods: {
     deleteBill(){
       for(let i in this.$store.state.personsInfo.billList){
@@ -14,6 +21,7 @@ export default {
           this.$store.state.personsInfo.billList.shift()
         }
       }
+      this.$store.commit('setShowBill', 0)
       this.$router.push('/')
     }
   }

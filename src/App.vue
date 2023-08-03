@@ -1,7 +1,12 @@
 <template>
- <main-navbar></main-navbar>
- <bill-navbar v-if="$route.params.id !== undefined"></bill-navbar>
- <router-view></router-view>
+  <div>
+    <div style="margin-bottom: 35px;">
+      <main-navbar></main-navbar>
+      <bill-navbar v-if="$route.params.id !== undefined"></bill-navbar>
+    </div>
+    <router-view></router-view>
+  </div>
+  
 </template>
 
 <script>
@@ -14,12 +19,6 @@ export default {
 </script>
 
 <style>
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
   .app{
     padding: 20px;
   }

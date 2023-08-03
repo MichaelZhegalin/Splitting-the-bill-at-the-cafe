@@ -1,11 +1,23 @@
 <template>
     <div class="billNavbar">
-        <div @click="$router.push(`/bill/${$route.params.id}`)">Менюшка</div>
-        <div class="btns">
-            <button @click="$router.push(`/bill/${$route.params.id}/persons`)">Люди</button>
-            <button @click="$router.push(`/bill/${$route.params.id}/food`)">Еда</button>
-            <button @click="$router.push(`/bill/${$route.params.id}/splitCheck`)">Счет</button>
-        </div>
+        <nav class="navbar navbar-style">
+            <div class="container-fluid">
+                <div class="row" style="display: flex; align-items: center;">
+                    <div class="col">
+                        <div class="navbar-brand" @click="goToBillInfo">Общая информация</div>
+                    </div>
+                    <div class="col">
+                        <button class="nav-link" @click="goToPersons">Люди</button>
+                    </div>
+                    <div class="col">
+                        <button class="nav-link" @click="goToFood">Еда</button>
+                    </div>
+                    <div class="col">
+                        <button class="nav-link" @click="goToSplitCheck">Счет</button>
+                    </div>
+                </div>    
+            </div>
+        </nav>
     </div>
   
 </template>
@@ -13,22 +25,56 @@
 <script>
 
 export default {
+    methods: {
+        goToBillInfo(){
+            this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 0})
+            this.$store.commit('setShowPerson', {billNumber: this.$route.params.id, personListEl: 0})
+            this.$router.push(`/bill/${this.$route.params.id}`)
+        },
+        goToPersons(){
+            this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 0})
+            this.$store.commit('setShowPerson', {billNumber: this.$route.params.id, personListEl: 0})
+            this.$router.push(`/bill/${this.$route.params.id}/persons`)
+        },
+        goToFood(){
+            if(this.$store.state.personsInfo.personList[this.$route.params.id - 1] !== undefined){
+                this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 0})
+                this.$store.commit('setShowPerson', {billNumber: this.$route.params.id, personListEl: 0})
+                this.$router.push(`/bill/${this.$route.params.id}/food`)
+            }else{
+                alert("Необходимо добавить хотя бы одного человека!")
+            } 
+        },
+        goToSplitCheck(){
+            this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 0})
+            this.$store.commit('setShowPerson', {billNumber: this.$route.params.id, personListEl: 0})
+            this.$router.push(`/bill/${this.$route.params.id}/splitCheck`)
+        },
+
+    }
 
 }
 </script>
 
 <style scoped>
-.billNavbar{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 15px;
-    width: 40vw;
-    margin: auto;
+
+.navbar-style{
+    background-color: #DEDAD6;
+    border-radius: 0 0 15px 15px;
 }
 
-.btns{
+.navbar-brand:hover{
+    cursor: pointer;
+    transition: 350ms;
+    color: olivedrab;
+}
+
+.nav-link:hover{
+    color: orangered;
+}
+
+.billNavbar{
     display: flex;
-    gap: 10px;
+    justify-content: center;
 }
 </style>

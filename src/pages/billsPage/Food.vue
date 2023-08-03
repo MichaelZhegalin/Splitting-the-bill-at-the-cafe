@@ -1,84 +1,64 @@
 <template>
-  <div>Тут будем собирать данные о еде</div>
-  <div :key="food.id" v-for="food in $store.state.foodInfo.food[`bill_${$route.params.id}`]">{{food.name}} стоит {{food.price}} руб.</div>
 
-  <form @submit.prevent>
-    <div v-if="addFoodVisible">
-      <input :value="foodName" @input="foodName = $event.target.value" type="text" placeholder="Название блюда">
-      <input :value="price" @input="price = $event.target.value" type="number" placeholder="Стоимость">
-      <div class="form-check" :key="person" v-for="person in $store.state.personsInfo.personList[$route.params.id - 1]">
-        <input class="form-check-input" type="checkbox" :value="person" v-model="personEatFood"> {{ person }}
-      </div>
+  <div style="overflow-y: auto; max-height: 75vh;">
 
-      <div v-if="!debtVisible">
-        <span>Если платит кто-то один, то нажмите эту кнопку: </span>
-        <button @click="debtPersonVisible">Выбрать</button>
-      </div>
+    <modal-add-food @save="saveNewFood"></modal-add-food>
 
-      <div v-else>
-        <select v-model="personDebt">
-          <option disabled value="">Выберите человека</option>
-          <option :key="person" :value="person" v-for="person in $store.state.personsInfo.personList[$route.params.id - 1]">{{ person }}</option>
-        </select>
-        <button @click="debtPersonVisible">Спрятать</button>
+    <carousel-food-card></carousel-food-card>
+
+    <div class="container">
+      <div class="row" style="display: flex; align-items: center;">
+        <div class="col btns">
+          <img @click="leftShift" v-if="shiftCounter !== 0" src="@/img/leftArrow.png" alt="Картинка потеряна :(" width="45" height="34" class="btn btn-light d-inline-block align-text-top">
+        </div>
+        <div class="col btns">
+          <button class="btn btn-info btn-lg" type="button" @click="addNewFood" data-bs-toggle="modal" data-bs-target="#foodModal">Добавить</button>
+        </div>
+        <div class="col btns">
+          <img @click="rigthShift" v-if="foodCounter - (shiftCounter + 1) * 3 > 0" src="@/img/rightArrow.png" alt="Картинка потеряна :(" width="45" height="34" class="btn btn-light d-inline-block align-text-top">
+        </div>
       </div>
-      
-      <button @click="saveNewFood">Сохранить</button>
     </div>
-    
-   <button v-else @click="addNewFood">Добавить</button>
-  </form>
-  
-  <div>{{ $store.state.foodInfo.food }}</div>
+
+  </div>
 
 </template>
 
 <script>
 
+import CarouselFoodCard from '@/components/carousel/CarouselFoodCard.vue';
+import ModalAddFood from '@/components/modal/ModalAddFood.vue';
+
 export default {
+  components: { CarouselFoodCard, ModalAddFood },
   data(){
     return{
-      debtVisible: false,
-      personEatFood: [],
-      personDebt: undefined,
+      shiftCounter: 0,
       storeFood: this.$store.state.foodInfo.food[`bill_${this.$route.params.id}`],
-      addFoodVisible: this.$store.state.foodInfo.food[`bill_${this.$route.params.id}`].length === 0?true:false,
-      price: 0,
-      foodName: '',
-      foodCounter: this.$store.state.foodInfo.food[`bill_${this.$route.params.id}`].length === 0?0:this.$store.state.foodInfo.food[`bill_${this.$route.params.id}`].length - 1,
+      foodCounter: this.$store.state.foodInfo.food[`bill_${this.$route.params.id}`].length === 0?0:this.$store.state.foodInfo.food[`bill_${this.$route.params.id}`].length,
       allFood: new Set()
     }
   },
   methods: {
     addNewFood(){
-    for (let i in this.storeFood){
-      this.allFood.add(this.storeFood[i].name);
-    }
-    this.addFoodVisible = true;
-    this.foodCounter += 1;
-  },
-    addPersonEatFood(checkboxPersonEatFood){
-      let personEatFood = [];
-      for(let i in checkboxPersonEatFood){
-        personEatFood.push(this.$store.state.personsInfo.personList[this.$route.params.id - 1][i]);
+      for (let i in this.storeFood){
+        this.allFood.add(this.storeFood[i].name);
       }
-
-      return personEatFood
     },
-    addPersonSpandMoney(personEatFood){
+    addPersonSpandMoney(personEatFood, price){
       for(let i in this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`]){
         if(personEatFood.includes(this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`][i].name)){
-          this.$store.commit('setPersonSpend', [this.price/personEatFood.length, this.$route.params.id, i]);
+          this.$store.commit('setPersonSpend', [price/personEatFood.length, this.$route.params.id, i]);
         }
       }
     },
-    addPayPersonAndDebtOther(personEatFood, payPerson){
+    addPayPersonAndDebtOther(personEatFood, payPerson, price){
       let payPersonId = undefined;
       let payPersonNumber = undefined;
       let numPersonEatFood = personEatFood.length;
       for(let i in this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`]){
         if(payPerson.localeCompare(this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`][i].name) === 0){
-          this.$store.commit('setPersonSpend', [Number(this.price), this.$route.params.id, i]);
+          this.$store.commit('setPersonSpend', [Number(price), this.$route.params.id, i]);
           payPersonId = this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`][i].id;
           payPersonNumber = i;
         }
@@ -90,59 +70,80 @@ export default {
         ){
           this.$store.commit('crossDebtCheck', {billNumber: this.$route.params.id, checkPersonNumber: payPersonNumber, personId: this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`][i].id})
           let crossDebt = this.$store.state.personsInfo.crossDebtCheck
-          console.log(crossDebt)
           
           if(crossDebt !== 0){
-            if(crossDebt < this.price/numPersonEatFood){
+            if(crossDebt < price/numPersonEatFood){
               this.$store.commit('clearDebt', {billNumber: this.$route.params.id, personNumber: payPersonNumber, debtId: this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`][i].id})
-              this.$store.commit('setPersonDebt', [{id: payPersonId, debt: this.price/numPersonEatFood - crossDebt}, this.$route.params.id, i])
-            }else if(crossDebt === this.price/numPersonEatFood){
+              this.$store.commit('setPersonDebt', [{id: payPersonId, debt: price/numPersonEatFood - crossDebt, namePerson: payPerson}, this.$route.params.id, i])
+            }else if(crossDebt === price/numPersonEatFood){
               this.$store.commit('clearDebt', {billNumber: this.$route.params.id, personNumber: payPersonNumber, debtId: this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`][i].id})
-              this.$store.commit('clearDebt', {billNumber: this.$route.params.id, personNumber: i, debtId: payPersonId})
+              // this.$store.commit('clearDebt', {billNumber: this.$route.params.id, personNumber: i, debtId: payPersonId})
             }else{
-              this.$store.commit('setPersonDebt', [{id: this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`][i].id, debt: -this.price/numPersonEatFood}, this.$route.params.id, payPersonNumber])
+              this.$store.commit('setPersonDebt', [{id: this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`][i].id, debt: -price/numPersonEatFood, namePerson: payPerson}, this.$route.params.id, payPersonNumber])
             }
           }else{
-            this.$store.commit('setPersonDebt', [{id: payPersonId, debt: this.price/numPersonEatFood}, this.$route.params.id, i])
+            this.$store.commit('setPersonDebt', [{id: payPersonId, debt: price/numPersonEatFood, namePerson: payPerson}, this.$route.params.id, i])
           }
         }
       }
     },
-    saveNewFood(){
-      if(this.personDebt !== undefined && !this.allFood.has(this.foodName.toLocaleLowerCase())){
-        this.allFood.add(this.foodName.toLocaleLowerCase());
-        this.$store.commit('setFoodName', [this.foodName.toLocaleLowerCase(), this.$route.params.id, this.foodCounter]);
-        this.$store.commit('setFoodPrice', [this.price, this.$route.params.id, this.foodCounter]);
-        this.$store.commit('setFoodEatPersons', [this.addPersonEatFood(this.personEatFood), this.$route.params.id, this.foodCounter]);
-        this.addPayPersonAndDebtOther(this.personEatFood, this.personDebt);
-        this.addFoodVisible = false;
-        this.price = 0;
-        this.foodName = '';
-        this.personEatFood = [];
-        this.personDebt = undefined;
-      }
-      else if(!this.allFood.has(this.foodName.toLocaleLowerCase())){
-        this.allFood.add(this.foodName.toLocaleLowerCase());
-        this.$store.commit('setFoodName', [this.foodName.toLocaleLowerCase(), this.$route.params.id, this.foodCounter]);
-        this.$store.commit('setFoodPrice', [this.price, this.$route.params.id, this.foodCounter]);
-        this.$store.commit('setFoodEatPersons', [this.addPersonEatFood(this.personEatFood), this.$route.params.id, this.foodCounter]);
-        this.addPersonSpandMoney(this.personEatFood);
-        this.addFoodVisible = false;
-        this.price = 0;
-        this.foodName = '';
-        this.personEatFood = [];
+    saveNewFood(foodName, price, personDebt, personEatFood){
+      if(!!Number(price) === false || Number(price) < 0){
+        alert('Цена должна быть набрана числом и быть больше 0!')
+      } 
+      else if(foodName === '' || personEatFood.length === 0){
+        alert('Сначала необходимо заполнить форму!')
       }else{
-        alert('Еда с таким названием уже существует');
+        if(personDebt !== '' && !this.allFood.has(foodName.toLocaleLowerCase())){
+
+          this.allFood.add(foodName.toLocaleLowerCase());
+          this.$store.commit('setFoodName', [foodName.toLocaleLowerCase(), this.$route.params.id, this.foodCounter]);
+          this.$store.commit('setFoodPrice', [price, this.$route.params.id, this.foodCounter]);
+          this.$store.commit('setFoodEatPersons', [personEatFood, this.$route.params.id, this.foodCounter]);
+          this.$store.commit('setPaid', [personDebt, this.$route.params.id, this.foodCounter]);
+          this.addPayPersonAndDebtOther(personEatFood, personDebt, price);
+          this.foodCounter += 1;
+
+          if(this.foodCounter < 4){
+            this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 0})
+          }else if(this.$store.state.foodInfo.foodListShow[`bill_${this.$route.params.id}`].length < 3){
+            this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 3 * this.shiftCounter})
+          }
+        }
+        else if(!this.allFood.has(foodName.toLocaleLowerCase())){
+          this.allFood.add(foodName.toLocaleLowerCase());
+          this.$store.commit('setFoodName', [foodName.toLocaleLowerCase(), this.$route.params.id, this.foodCounter]);
+          this.$store.commit('setFoodPrice', [price, this.$route.params.id, this.foodCounter]);
+          this.$store.commit('setFoodEatPersons', [personEatFood, this.$route.params.id, this.foodCounter]);
+          this.$store.commit('setPaid', ['Все, кто ел', this.$route.params.id, this.foodCounter]);
+          this.addPersonSpandMoney(personEatFood, price);
+          this.foodCounter += 1;
+
+          if(this.foodCounter < 4){
+            this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 0})
+          }else if(this.$store.state.foodInfo.foodListShow[`bill_${this.$route.params.id}`].length < 3){
+            this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 3 * this.shiftCounter})
+          }
+        }else{
+          alert('Еда с таким названием уже существует');
+        }
       }
     },
-    debtPersonVisible(){
-      this.debtVisible = !this.debtVisible;
-      this.personDebt = undefined;
-    }
+    rigthShift(){
+      this.shiftCounter += 1;
+      this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 3 * this.shiftCounter});
+    },
+  leftShift(){
+      this.shiftCounter -= 1;
+      this.$store.commit('setShowFood', {billNumber: this.$route.params.id, foodListEl: 3 * this.shiftCounter});
+    },
   }
 }
 </script>
 
-<style>
-
+<style scoped>
+.btns{
+  display: flex;
+  justify-content: center;
+}
 </style>
