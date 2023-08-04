@@ -9,7 +9,7 @@
         <li class="list-group-item card__li">Общая сумма счета: {{$store.state.personsInfo.allPersonsSpend[`bill_${billNumber}`] === undefined?0:$store.state.personsInfo.allPersonsSpend[`bill_${billNumber}`]}}</li>
       </ul>
     </p>
-    <button @click="$router.push(`/bill/${billNumber}`)" class="btn btn-primary btn-lg">Открыть Счет</button>
+    <v-btn size="large" color="#0D6EFD" @click="$router.push(`/bill/${billNumber}`)">Открыть Счет</v-btn>
   </div>
 </div>
 </template>

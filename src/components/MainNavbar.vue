@@ -2,7 +2,7 @@
   <nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
       <div class="navbar-brand" style="display: flex; cursor: pointer;" @click="goToMain">
-        <img src="../img/cup.png" alt="Картинка потеряна :(" width="55" height="44" class="d-inline-block align-text-top">
+        <v-img src="../img/cup.png" width="55" height="44" class="d-inline-block align-text-top" alt="Картинка потеряна :("></v-img>
         <span class="navbar-brand-text">Делим счет в кафе</span>
       </div>
     </div>

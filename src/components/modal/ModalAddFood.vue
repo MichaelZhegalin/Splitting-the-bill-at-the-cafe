@@ -9,8 +9,10 @@
         <div class="modal-body modal-body-style">
           <form @submit.prevent class="foodForm">
               <div>
-                <input :value="foodName" @input="foodName = $event.target.value" type="text" placeholder="Название блюда" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
-                <input :value="price" @input="price = $event.target.value" type="number" placeholder="Стоимость" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
+                <v-text-field :value="foodName" @input="foodName = $event.target.value" label="Блюдо"></v-text-field>
+                <v-text-field :value="price" @input="price = $event.target.value" type="number" label="Цена"></v-text-field>
+                <!-- <input :value="foodName" @input="foodName = $event.target.value" type="text" placeholder="Название блюда" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
+                <input :value="price" @input="price = $event.target.value" type="number" placeholder="Стоимость" class="form-control" aria-label="Username" aria-describedby="addon-wrapping"> -->
               </div>
               <div>
                 <h6 style="text-align: center;">Выберите людей, евших блюдо: </h6>
@@ -35,7 +37,7 @@
           </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
           <button @click="saveNewFood" type="button" class="btn btn-primary">Сохранить</button>
         </div>
       </div>

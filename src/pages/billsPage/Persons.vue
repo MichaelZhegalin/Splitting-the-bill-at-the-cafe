@@ -9,13 +9,17 @@
     <div class="container">
       <div class="row" style="display: flex; align-items: center;">
         <div class="col btns">
-          <img @click="leftShift" v-if="shiftCounter !== 0" src="@/img/leftArrow.png" alt="Картинка потеряна :(" width="45" height="34" class="btn btn-light d-inline-block align-text-top">
+          <v-btn @click="leftShift" v-if="shiftCounter !== 0">
+            <v-img src="https://sun9-10.userapi.com/impg/uXVjwI7CPIX_xD1bVNMU71N6JB2F0pIl1vEqBg/t3cyzvrs6Ao.jpg?size=512x512&quality=96&sign=7af13afb3a033d167914009b805190b7&type=album" alt="Картинка потеряна :(" width="35" height="24"></v-img>
+          </v-btn>
         </div>
         <div class="col btns">
-          <button class="btn btn-info btn-lg" type="button" @click="addNewPerson" data-bs-toggle="modal" data-bs-target="#personModal">Добавить</button>
+          <v-btn size="large" color="#0DCAF0" @click="addNewPerson" data-bs-toggle="modal" data-bs-target="#personModal">Добавить</v-btn>
         </div>
         <div class="col btns">
-          <img @click="rigthShift" v-if="personCounter - (shiftCounter + 1) * 3 > 0" src="@/img/rightArrow.png" alt="Картинка потеряна :(" width="45" height="34" class="btn btn-light d-inline-block align-text-top">
+          <v-btn  @click="rigthShift" v-if="personCounter - (shiftCounter + 1) * 3 > 0">
+            <v-img src="https://sun9-33.userapi.com/impg/Am2RKr-vGSDptop3HWqYdvWTeE4KdSyXFY9_WQ/K9ac4Dbk618.jpg?size=512x512&quality=96&sign=a02e9fcc8d9d788446a81565c96cf79d&type=album" alt="Картинка потеряна :(" width="35" height="24"></v-img>
+          </v-btn>
         </div>
       </div>
     </div>
