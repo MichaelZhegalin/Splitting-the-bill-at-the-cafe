@@ -15,7 +15,7 @@
         </div>
       </div>
     </div>
-  </template>
+</template>
   
   <script>
     import FoodCard from '../card/FoodCard.vue'

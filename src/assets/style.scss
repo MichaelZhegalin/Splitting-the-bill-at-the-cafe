@@ -1,6 +1,19 @@
 @import "./variables.scss";
 
 body{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: $bodyBackground;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+}
+
+.testbody{
+    position: absolute;
+    top: 0;
+    left: 0;
     background: $bodyBackground;
     background-size: cover;
     height: 100vh;

@@ -4,13 +4,17 @@
     <div class="container">
       <div class="row" style="display: flex; align-items: center;">
         <div class="col btns">
-          <img @click="leftShift" v-if="shiftCounter !== 0" src="../img/leftArrow.png" alt="Картинка потеряна :(" width="45" height="34" class="btn btn-light d-inline-block align-text-top">
+          <v-btn @click="leftShift" v-if="shiftCounter !== 0">
+            <v-img src="../img/leftArrow.png" alt="Картинка потеряна :(" width="35" height="24"></v-img>
+          </v-btn>
         </div>
         <div class="col btns">
-          <button class="btn btn-info btn-lg" @click="addNewBill">Добавить чек</button>
+          <v-btn size="large" color="#0DCAF0" @click="addNewBill">Добавить чек</v-btn>
         </div>
         <div class="col btns">
-          <img @click="rigthShift" v-if="$store.state.personsInfo.billList.length - (shiftCounter + 1) * 3 > 0" src="../img/rightArrow.png" alt="Картинка потеряна :(" width="45" height="34" class="btn btn-light d-inline-block align-text-top">
+          <v-btn  @click="rigthShift" v-if="$store.state.personsInfo.billList.length - (shiftCounter + 1) * 3 > 0">
+            <v-img src="../img/rightArrow.png" alt="Картинка потеряна :(" width="35" height="24"></v-img>
+          </v-btn>
         </div>
       </div>
     </div>

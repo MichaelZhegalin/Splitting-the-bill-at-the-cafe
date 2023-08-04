@@ -7,10 +7,10 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body modal-body-style">
-                    <input :value="namePerson" @input="namePerson = $event.target.value" placeholder="Введите имя человека" type="text" class="form-control" aria-label="Username" aria-describedby="addon-wrapping">
+                    <v-text-field :value="namePerson" @input="namePerson = $event.target.value" label="Имя"></v-text-field>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
                     <button @click="savePerson" type="button" class="btn btn-primary">Сохранить</button>
                 </div>
             </div>
