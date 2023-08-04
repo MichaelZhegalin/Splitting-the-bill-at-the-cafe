@@ -22,7 +22,7 @@ npm run build
 
 ### See app without installation
 ```
-https://64cc2d5c74696f2af14b9e20--melodic-parfait-6466c3.netlify.app/
+https://64cceb9bbe3d0c7f420eb10c--transcendent-sable-5ad2ea.netlify.app/
 ```
 
 ### Customize configuration
