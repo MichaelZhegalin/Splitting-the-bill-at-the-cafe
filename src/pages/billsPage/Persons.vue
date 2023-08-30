@@ -1,87 +1,112 @@
 <template>
-
-  <div style="overflow-y: auto; max-height: 75vh;">
-
-    <modal-add-person @save="savePerson"></modal-add-person>
-
-    <carousel-person-card></carousel-person-card>
-
+  <div class="persons-size persons-overflow">
+    <modal-add-person @save="savePerson" v-model="showModal"/>
+    <carousel-person-card/>
     <div class="container">
-      <div class="row" style="display: flex; align-items: center;">
+      <div class="row row-internal-position">
         <div class="col btns">
           <v-btn @click="leftShift" v-if="shiftCounter !== 0">
-            <v-img src="https://sun9-10.userapi.com/impg/uXVjwI7CPIX_xD1bVNMU71N6JB2F0pIl1vEqBg/t3cyzvrs6Ao.jpg?size=512x512&quality=96&sign=7af13afb3a033d167914009b805190b7&type=album" alt="Картинка потеряна :(" width="35" height="24"></v-img>
+            <v-img 
+              :src="require('/src/img/leftArrow.png')" 
+              alt="Картинка потеряна :(" 
+              width="35" 
+              height="24"
+            />
           </v-btn>
         </div>
         <div class="col btns">
-          <v-btn size="large" color="#0DCAF0" @click="addNewPerson" data-bs-toggle="modal" data-bs-target="#personModal">Добавить</v-btn>
+          <v-btn 
+            size="large" 
+            color="#0DCAF0" 
+            @click="addNewPerson" 
+          >
+            Добавить
+          </v-btn>
         </div>
         <div class="col btns">
-          <v-btn  @click="rigthShift" v-if="personCounter - (shiftCounter + 1) * 3 > 0">
-            <v-img src="https://sun9-33.userapi.com/impg/Am2RKr-vGSDptop3HWqYdvWTeE4KdSyXFY9_WQ/K9ac4Dbk618.jpg?size=512x512&quality=96&sign=a02e9fcc8d9d788446a81565c96cf79d&type=album" alt="Картинка потеряна :(" width="35" height="24"></v-img>
+          <v-btn  @click="rightShift" v-if="personCounter - (shiftCounter + 1) * 3 > 0">
+            <v-img 
+              :src="require('/src/img/rightArrow.png')"  
+              alt="Картинка потеряна :(" 
+              width="35" 
+              height="24"
+            />
           </v-btn>
         </div>
       </div>
     </div>
-
   </div>
-
 </template>
 
 <script>
-import CarouselPersonCard from '@/components/carousel/CarouselPersonCard.vue';
-import ModalAddPerson from '@/components/modal/ModalAddPerson.vue';
-export default {
-  components: { CarouselPersonCard, ModalAddPerson },
- data(){
-  return{
-    storePerson: this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`],
-    namePerson: '',
-    personCounter: this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`].length === 0?0:this.$store.state.personsInfo.persons[`bill_${this.$route.params.id}`].length,
-    allPerson: new Set(),
-    shiftCounter: 0,
-  }
- },
- methods: {
-  addNewPerson(){
-    for (let i in this.storePerson){
-      this.allPerson.add(this.storePerson[i].name);
+  import CarouselPersonCard from '@/components/carousel/CarouselPersonCard.vue';
+  import ModalAddPerson from '@/components/modal/ModalAddPerson.vue';
+  export default {
+    components: { CarouselPersonCard, ModalAddPerson },
+    data(){
+      return{
+        storePerson: this.$store.state.personsInfo.persons[`bill_${this.$route.params.billId}`],
+        namePerson: '',
+        personCounter: 
+          this.$store.state.personsInfo.persons[`bill_${this.$route.params.billId}`].length === 0
+          ? 0
+          : this.$store.state.personsInfo.persons[`bill_${this.$route.params.billId}`].length,
+        allPerson: new Set(),
+        shiftCounter: 0,
+        showModal: false
+      }
+    },
+    methods: {
+      addNewPerson(){
+        this.showModal = true;
+        for (let i in this.storePerson){
+          this.allPerson.add(this.storePerson[i].name);
+        }
+      },
+      savePerson(namePerson){
+        if (namePerson !== ''){
+          if (!this.allPerson.has(namePerson.toLocaleLowerCase())){
+          this.allPerson.add(namePerson.toLocaleLowerCase());
+          this.$store.commit('setPersonList', {array: Array.from(this.allPerson), number: this.$route.params.billId - 1});
+          this.$store.commit('setPersonName', [namePerson.toLocaleLowerCase(), this.$route.params.billId, this.personCounter]);
+          this.personCounter += 1;
+          if (this.personCounter < 4){
+            this.$store.commit('setShowPerson', {billNumber: this.$route.params.billId, personListEl: 0});
+          } else if (this.$store.state.personsInfo.personListShow[`bill_${this.$route.params.billId}`].length < 3){
+            this.$store.commit('setShowPerson', {billNumber: this.$route.params.billId, personListEl: 3 * this.shiftCounter});
+          }
+        } else{
+          alert('Пользователь с таким именем уже существует!');
+          }
+        } else{
+          alert('Необходимо ввести имя!');
+        } 
+      },
+      rightShift(){
+          this.shiftCounter += 1;
+          this.$store.commit('setShowPerson', {billNumber: this.$route.params.billId, personListEl: 3 * this.shiftCounter});
+        },
+      leftShift(){
+          this.shiftCounter -= 1;
+          this.$store.commit('setShowPerson', {billNumber: this.$route.params.billId, personListEl: 3 * this.shiftCounter});
+        },
     }
-  },
-  savePerson(namePerson){
-    if(namePerson !== ''){
-      if(!this.allPerson.has(namePerson.toLocaleLowerCase())){
-      this.allPerson.add(namePerson.toLocaleLowerCase());
-      this.$store.commit('setPersonList', {array: Array.from(this.allPerson), number: this.$route.params.id - 1});
-      this.$store.commit('setPersonName', [namePerson.toLocaleLowerCase(), this.$route.params.id, this.personCounter]);
-      this.personCounter += 1;
-      if(this.personCounter < 4){
-        this.$store.commit('setShowPerson', {billNumber: this.$route.params.id, personListEl: 0})
-      }else if(this.$store.state.personsInfo.personListShow[`bill_${this.$route.params.id}`].length < 3){
-        this.$store.commit('setShowPerson', {billNumber: this.$route.params.id, personListEl: 3 * this.shiftCounter})
-      }
-    }else{
-      alert('Пользователь с таким именем уже существует!')
-      }
-    }else{
-      alert('Необходимо ввести имя!')
-    } 
-  },
-  rigthShift(){
-      this.shiftCounter += 1;
-      this.$store.commit('setShowPerson', {billNumber: this.$route.params.id, personListEl: 3 * this.shiftCounter});
-    },
-  leftShift(){
-      this.shiftCounter -= 1;
-      this.$store.commit('setShowPerson', {billNumber: this.$route.params.id, personListEl: 3 * this.shiftCounter});
-    },
- }
-}
+  }
 </script>
 
 <style scoped>
-.btns{
-  display: flex;
-  justify-content: center;
-}
+  .row-internal-position{
+    display: flex; 
+    align-items: center;
+  }
+  .persons-size{
+    max-height: 75vh;
+  }
+  .persons-overflow{
+    overflow-y: auto;
+  }
+  .btns{
+    display: flex;
+    justify-content: center;
+  }
 </style>

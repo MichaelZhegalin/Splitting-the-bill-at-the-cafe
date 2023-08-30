@@ -9,7 +9,6 @@ import './assets/style.scss'
 import { loadFonts } from './plugins/webfontloader'
 
 loadFonts()
-
 createApp(App)
   .use(bootstrap)
   .use(router)

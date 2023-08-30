@@ -11,23 +11,22 @@ const routes = [
     component: MainPage
   },
   {
-    path: '/bill/:id',
+    path: '/bill/:billId',
     component: BillMain
   },
   {
-    path: '/bill/:id/persons',
+    path: '/bill/:billId/persons',
     component: Persons
   },
   {
-    path: '/bill/:id/food',
+    path: '/bill/:billId/food',
     component: Food
   },
   {
-    path: '/bill/:id/splitCheck',
+    path: '/bill/:billId/splitCheck',
     component: SplitCheck
   },
 ]
-
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes

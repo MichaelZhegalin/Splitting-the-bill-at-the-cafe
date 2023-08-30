@@ -1,9 +1,9 @@
 <template>
   <v-app>
-    <v-main class="testbody">
-      <div style="margin-bottom: 35px;">
-        <main-navbar></main-navbar>
-        <bill-navbar v-if="$route.params.id !== undefined"></bill-navbar>
+    <v-main class="app-backgroundImage">
+      <div class="nav-margin">
+        <MainNavbar/>
+        <bill-navbar v-if="$route.params.billId !== undefined"/>
       </div>
       <router-view></router-view>
     </v-main>
@@ -20,8 +20,11 @@ export default {
 </script>
 
 <style>
-@import "/src/assets/style.scss";
+  @import "/src/assets/style.scss";
   .app{
     padding: 20px;
+  }
+  .nav-margin{
+    margin-bottom: 35px;
   }
 </style>

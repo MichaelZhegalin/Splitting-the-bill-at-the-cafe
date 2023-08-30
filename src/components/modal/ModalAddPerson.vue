@@ -1,28 +1,44 @@
 <template>
-    <div class="modal fade" id="personModal" tabindex="-1" aria-labelledby="personModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="personModalLabel">Введите имя человека</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body modal-body-style">
-                    <v-text-field :value="namePerson" @input="namePerson = $event.target.value" label="Имя"></v-text-field>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button @click="savePerson" type="button" class="btn btn-primary">Сохранить</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <v-dialog v-model="show" transition="dialog-top-transition" width="20rem">
+        <v-card class="card-padding">
+            <v-toolbar color="info" title="Введите имя человека"/>
+            <v-form @submit.prevent>
+                <v-text-field
+                    :value="namePerson" 
+                    @input="namePerson = $event.target.value"
+                    :rules="rules"
+                    label="Имя"
+                    variant="underlined"
+                />
+                <v-btn 
+                    @click="savePerson" 
+                    type="submit" 
+                    block 
+                    class="mt-2 text-white btn-color"
+                >
+                    Сохранить
+                </v-btn>
+            </v-form>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script>
     export default {
+        props: {
+            showModal: Boolean,
+        },
         data(){
             return{
                 namePerson: '',
+                rules: [
+                    value =>{
+                        if (value){
+                            return true
+                        } 
+                        return 'Необходимо ввести имя человека'
+                    }
+                ],
             }
         },
         methods: {
@@ -30,15 +46,25 @@
                 this.$emit('save', this.namePerson);
                 this.namePerson = '';
             }
+        },
+        computed: {
+            show: {
+                get(){
+                    return this.showModal;
+                },
+                set (value) {
+                    this.$emit('input', value)
+                }
+            }
         }
     }
 </script>
 
 <style scoped>
-.modal-body-style{
-    display: flex;
-    justify-content: center; 
-    background-color: whitesmoke;
-}
-
+    .card-padding{
+        padding: 15px;
+    }
+    .btn-color{
+        background-color: forestgreen;
+    }
 </style>
