@@ -1,18 +1,18 @@
 <template>
   <v-app>
-    <v-main class="app-backgroundImage">
+    <v-main class="app-background-img">
       <div class="nav-margin">
         <MainNavbar/>
         <bill-navbar v-if="$route.params.billId !== undefined"/>
       </div>
-      <router-view></router-view>
+      <router-view/>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import BillNavbar from "@/components/BillNavbar.vue"
-import MainNavbar from './components/MainNavbar.vue'
+import MainNavbar from '@/components/MainNavbar.vue'
 export default {
   components: { MainNavbar, BillNavbar },
 

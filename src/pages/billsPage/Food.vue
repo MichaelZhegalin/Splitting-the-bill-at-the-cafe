@@ -1,6 +1,6 @@
 <template>
   <div class="food-size food-overflow">
-    <modal-add-food @save="saveNewFood" v-model="showModal"/>
+    <modal-add-food @save="saveNewFood" v-model="isShowModalProp"/>
     <carousel-food-card/>
     <div class="container">
       <div class="row row-internal-position">
@@ -52,12 +52,12 @@
           ? 0
           : this.$store.state.foodInfo.food[`bill_${this.$route.params.billId}`].length,
         allFood: new Set(),
-        showModal: false
+        isShowModalProp: false
       }
     },
     methods: {
       addNewFood(){
-        this.showModal = true;
+        this.isShowModalProp = true;
         for (let i in this.storeFood){
           this.allFood.add(this.storeFood[i].name);
         }

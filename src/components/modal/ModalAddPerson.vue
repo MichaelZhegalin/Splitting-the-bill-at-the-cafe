@@ -1,5 +1,5 @@
 <template>
-    <v-dialog v-model="show" transition="dialog-top-transition" width="20rem">
+    <v-dialog v-model="isShowModal" transition="dialog-top-transition" width="20rem">
         <v-card class="card-padding">
             <v-toolbar color="info" title="Введите имя человека"/>
             <v-form @submit.prevent>
@@ -26,7 +26,7 @@
 <script>
     export default {
         props: {
-            showModal: Boolean,
+            isShowModalProp: Boolean,
         },
         data(){
             return{
@@ -48,9 +48,9 @@
             }
         },
         computed: {
-            show: {
+            isShowModal: {
                 get(){
-                    return this.showModal;
+                    return this.isShowModalProp;
                 },
                 set (value) {
                     this.$emit('input', value)

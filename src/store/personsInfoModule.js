@@ -8,8 +8,6 @@ export const personsInfoModule = {
         crossDebtCheck: 0,
         allPersonsSpend: {}
     }),
-    getters: {
-    },
     mutations: {
         setPersonList(state, personList){
             state.personList[personList.number] = personList.array;

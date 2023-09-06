@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="show" transition="dialog-top-transition" width="20rem">
+  <v-dialog v-model="isShowModal" transition="dialog-top-transition" width="20rem">
     <v-card class="card-padding">
       <v-toolbar color="info" title="Заполните форму"/>
       <v-form @submit.prevent>
@@ -26,11 +26,11 @@
           :items="$store.state.personsInfo.personList[$route.params.billId - 1]"
           variant="underlined"
         />
-        <div v-if="!debtVisible" class="food-form-choose-paid-person">
+        <div v-if="!debtVisible" class="food-form__payer-select">
           <p class="modal-help-text">Если платит кто-то один, то нажмите кнопку: </p>
           <v-btn @click="debtPersonVisible" class="btn btn-secondary">Выбрать</v-btn>
         </div>
-        <div v-else class="food-form-choose-paid-person">
+        <div v-else class="food-form__payer-select">
           <v-select 
             v-model="personDebt" 
             :items="$store.state.personsInfo.personList[$route.params.billId - 1]" 
@@ -56,7 +56,7 @@
 <script>
   export default {
     props: {
-        showModal: Boolean,
+        isShowModalProp: Boolean,
     },
     data(){
       return{
@@ -97,9 +97,9 @@
         },
     },
     computed: {
-      show: {
+      isShowModal: {
           get(){
-            return this.showModal;
+            return this.isShowModalProp;
           },
           set (value) {
             this.$emit('input', value)
@@ -119,7 +119,7 @@
   .btn-color{
     background-color: forestgreen;
   }
-  .food-form-choose-paid-person{
+  .food-form__payer-select{
     margin-top: 0;
     margin-bottom: 15px;
     display: flex;

@@ -1,6 +1,6 @@
 <template>
   <div class="persons-size persons-overflow">
-    <modal-add-person @save="savePerson" v-model="showModal"/>
+    <modal-add-person @save="savePerson" v-model="isShowModalProp"/>
     <carousel-person-card/>
     <div class="container">
       <div class="row row-internal-position">
@@ -53,12 +53,12 @@
           : this.$store.state.personsInfo.persons[`bill_${this.$route.params.billId}`].length,
         allPerson: new Set(),
         shiftCounter: 0,
-        showModal: false
+        isShowModalProp: false
       }
     },
     methods: {
       addNewPerson(){
-        this.showModal = true;
+        this.isShowModalProp = true;
         for (let i in this.storePerson){
           this.allPerson.add(this.storePerson[i].name);
         }

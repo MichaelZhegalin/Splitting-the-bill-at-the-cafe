@@ -4,8 +4,6 @@ export const foodInfoModule = {
         billList: [],
         foodListShow: {},
     }),
-    getters: {
-    },
     mutations: {
         setFoodName(state, name){
             if (state.food[`bill_${name[1]}`][name[2]] === undefined){
