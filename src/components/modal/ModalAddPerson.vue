@@ -2,7 +2,7 @@
     <v-dialog v-model="isShowModal" transition="dialog-top-transition" width="20rem">
         <v-card class="card-padding">
             <v-toolbar color="info" title="Введите имя человека"/>
-            <v-form @submit.prevent>
+            <v-form @submit.prevent="savePerson">
                 <v-text-field
                     :value="namePerson" 
                     @input="namePerson = $event.target.value"
@@ -10,8 +10,7 @@
                     label="Имя"
                     variant="underlined"
                 />
-                <v-btn 
-                    @click="savePerson" 
+                <v-btn  
                     type="submit" 
                     block 
                     class="mt-2 text-white btn-color"

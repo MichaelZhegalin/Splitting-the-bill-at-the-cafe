@@ -2,7 +2,7 @@
   <v-dialog v-model="isShowModal" transition="dialog-top-transition" width="20rem">
     <v-card class="card-padding">
       <v-toolbar color="info" title="Заполните форму"/>
-      <v-form @submit.prevent>
+      <v-form @submit.prevent="saveNewFood">
         <v-text-field
           :value="foodName" 
           @input="foodName = $event.target.value"
@@ -41,7 +41,6 @@
           <v-btn @click="debtPersonVisible" class="btn btn-danger">Отмена</v-btn>
         </div>
         <v-btn 
-          @click="saveNewFood" 
           type="submit" 
           block 
           class="mt-2 text-white btn-color"
